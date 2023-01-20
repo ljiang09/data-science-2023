@@ -5,15 +5,18 @@ date: 2020-05-03
 output: github_document
 time: 10
 reading: 0
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 # Data: Basics
 
-*Purpose*: When first studying a new dataset, there are very simple checks we
-should perform first. These are those checks.
+*Purpose*: When first studying a new dataset, there are very simple
+checks we should perform first. These are those checks.
 
-Additionally, we'll have our first look at the *pipe operator*, which will be
-super useful for writing code that's readable.
+Additionally, we'll have our first look at the *pipe operator*, which
+will be super useful for writing code that's readable.
 
 *Reading*: (None)
 
@@ -27,41 +30,55 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## First Checks
+
 <!-- -------------------------------------------------- -->
 
-### __q0__ Run the following chunk:
+### **q0** Run the following chunk:
 
-*Hint*: You can do this either by clicking the green arrow at the top-right of
-the chunk, or by using the keybaord shortcut `Shift` + `Cmd/Ctrl` + `Enter`.
+*Hint*: You can do this either by clicking the green arrow at the
+top-right of the chunk, or by using the keybaord shortcut `Shift` +
+`Cmd/Ctrl` + `Enter`.
 
 ```{r }
 head(iris)
 ```
 
-This is a *dataset*; the fundamental object we'll study throughout this course.
-Some nomenclature:
+This is a *dataset*; the fundamental object we'll study throughout this
+course. Some nomenclature:
 
-- The `1, 2, 3, ...` on the left enumerate the **rows** of the dataset
-- The names `Sepal.Length`, `Sepal.Width`, `...` name the **columns** of the dataset
-- The column `Sepal.Length` takes **numeric** values
-- The column `Species` takes **string** values
+-   The `1, 2, 3, ...` on the left enumerate the **rows** of the dataset
+-   The names `Sepal.Length`, `Sepal.Width`, `...` name the **columns**
+    of the dataset
+-   The column `Sepal.Length` takes **numeric** values
+-   The column `Species` takes **string** values
 
-### __q1__ Load the `tidyverse` and inspect the `diamonds` dataset. What do the
+### **q1** Load the `tidyverse` and inspect the `diamonds` dataset. What do the
+
 `cut`, `color`, and `clarity` variables mean?
 
-*Hint*: You can run `?diamonds` to get information on a built-in dataset.
+*Hint*: You can run `?diamonds` to get information on a built-in
+dataset.
 
 ```{r load-packages, eval=FALSE}
+?diamonds
 ```
 
-### __q2__ Run `glimpse(diamonds)`; what variables does `diamonds` have?
+    cut: quality of the cut
+    color: diamond color, from D to J (best to worst)
+    clarity: measures how clear the diamond is
 
+### **q2** Run `glimpse(diamonds)`; what variables does `diamonds` have?
 
-### __q3__ Run `summary(diamonds)`; what are the common values for each of the
-variables? How widely do each of the variables vary?
+```{r}
+glimpse(diamonds)
+```
 
-*Hint*: The `Median` and `Mean` are common values, while `Min` and `Max` give us
-a sense of variation.
+    The variables of `diamond` are: carat, cut, color, clarity, depth, table, price, x, y, z
+
+### **q3** Run `summary(diamonds)`; what are the common values for each of the variables? How widely do each of the variables vary?
+
+*Hint*: The `Median` and `Mean` are common values, while `Min` and `Max`
+give us a sense of variation.
 
 ```{r q3-task}
 summary(diamonds)
@@ -69,19 +86,48 @@ summary(diamonds)
 
 **Observations**:
 
-- (Write your observations here!)
+-   All the summaries come with a price associated with each value. For
+    some of the discrete data, the categories are listed and the mean
+    price is listed. For continuous values, a statistical breakdown is
+    provided with the min/max and mean and other values.
 
-You should always analyze your dataset in the simplest way possible, build
-hypotheses, and devise more specific analyses to probe those hypotheses. The
-`glimpse()` and `summary()` functions are two of the simplest tools we have.
+-   Carat: the carat varies from 0.2 to 5.01, and the prices of this
+    range are from 326 to 18823.
+
+-   Cut: there are 5 values representing the quality of the cut, and as
+    the cut gets bigger, the price increases (range of 1610 to 21551)
+
+-   Color: Some colors are more valuable than others, but there is no
+    sorted order other than the price. The price ranges from 2808 to
+    11292
+
+-   Clarity: The clearer the stone, the higher the worth. The price
+    ranges from 2531 to 13065
+
+-   Depth: The depth is a continuous value. The price based on the range
+    of depths ranges from 43 to 79.
+
+-   Table: what the hell is this
+
+-   the x value ranges from 0 to 10.74
+
+-   y ranges from 0 to 58.9
+
+-   z ranges from 0 to 31.8
+
+You should always analyze your dataset in the simplest way possible,
+build hypotheses, and devise more specific analyses to probe those
+hypotheses. The `glimpse()` and `summary()` functions are two of the
+simplest tools we have.
 
 ## The Pipe Operator
+
 <!-- -------------------------------------------------- -->
 
-Throughout this class we're going to make heavy use of the *pipe operator*
-`%>%`. This handy little function will help us make our code more readable.
-Whenever you see `%>%`, you can translate that into the word "then". For
-instance
+Throughout this class we're going to make heavy use of the *pipe
+operator* `%>%`. This handy little function will help us make our code
+more readable. Whenever you see `%>%`, you can translate that into the
+word "then". For instance
 
 ```{r pipe-example}
 diamonds %>%
@@ -91,34 +137,44 @@ diamonds %>%
 
 Would translate into the tiny "story"
 
-- Take the `diamonds` dataset, *then*
-- Group it by the variable `cut`, *then*
-- summarize it by computing the `mean` of `carat`
+-   Take the `diamonds` dataset, *then*
+-   Group it by the variable `cut`, *then*
+-   summarize it by computing the `mean` of `carat`
 
 *What the pipe actually does*. The pipe operator `LHS %>% RHS` takes its
-left-hand side (LHS) and inserts it as an the first argument to the function on
-its right-hand side (RHS). So the pipe will let us take `glimpse(diamonds)` and
-turn it into `diamonds %>% glimpse()`.
+left-hand side (LHS) and inserts it as an the first argument to the
+function on its right-hand side (RHS). So the pipe will let us take
+`glimpse(diamonds)` and turn it into `diamonds %>% glimpse()`.
 
-### __q4__ Use the pipe operator to re-write `summary(diamonds)`.
+### **q4** Use the pipe operator to re-write `summary(diamonds)`.
 
 ```{r q4-task}
+diamonds %>% summary()
 ```
 
 ## Reading Data
+
 <!-- -------------------------------------------------- -->
 
-So far we've only been looking at built-in datasets. Ultimately, we'll want to read in our own data. We'll get to the art of loading and *wrangling* data later, but for now, know that the `readr` package provides us tools to read data. Let's quickly practice loading data below.
+So far we've only been looking at built-in datasets. Ultimately, we'll
+want to read in our own data. We'll get to the art of loading and
+*wrangling* data later, but for now, know that the `readr` package
+provides us tools to read data. Let's quickly practice loading data
+below.
 
-### __q5__ Use the function `read_csv()` to load the file `"./data/tiny.csv"`.
+### **q5** Use the function `read_csv()` to load the file `"./data/tiny.csv"`.
 
 ```{r q5-task}
 
-df_q5
+read_csv("./data/tiny.csv")
 ```
 
 <!-- include-exit-ticket -->
+
 # Exit Ticket
+
 <!-- -------------------------------------------------- -->
 
-Once you have completed this exercise, make sure to fill out the **exit ticket survey**, [linked here](https://docs.google.com/forms/d/e/1FAIpQLSeuq2LFIwWcm05e8-JU84A3irdEL7JkXhMq5Xtoalib36LFHw/viewform?usp=pp_url&entry.693978880=e-data00-basics-assignment.Rmd).
+Once you have completed this exercise, make sure to fill out the **exit
+ticket survey**, [linked
+here](https://docs.google.com/forms/d/e/1FAIpQLSeuq2LFIwWcm05e8-JU84A3irdEL7JkXhMq5Xtoalib36LFHw/viewform?usp=pp_url&entry.693978880=e-data00-basics-assignment.Rmd).
