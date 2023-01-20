@@ -4,6 +4,8 @@
 
 This is a curriculum of **open-source** data science exercises, intended to take a student from zero coding experience to basic data science literacy. These exercises are heavily inspired by the (discontinued) [Data Challenge Lab](https://dcl-docs.stanford.edu/home/) at Stanford University and rely on the [Tidyverse](https://www.tidyverse.org/).
 
+I'm taking this Data Science course in Spring 2023.
+
 ## How to Use This Repo
 
 1. (Setup) Complete [this exercise](https://zdelrosario.github.io/data-science-curriculum/setup-rstudio.html) to install RStudio.
