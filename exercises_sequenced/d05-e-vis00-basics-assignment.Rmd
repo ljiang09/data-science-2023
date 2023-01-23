@@ -39,7 +39,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ### **q2** Use your "standard checks" to determine what variables the dataset has.
 
 ```{r}
-diamonds
+glimpse(diamonds)
 ```
 
 Now that we have the list of variables in the dataset, we know what we can

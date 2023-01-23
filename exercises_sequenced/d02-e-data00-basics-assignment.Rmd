@@ -166,7 +166,8 @@ below.
 
 ```{r q5-task}
 
-read_csv("./data/tiny.csv")
+df_q5 <-
+  read_csv("./data/tiny.csv")
 ```
 
 <!-- include-exit-ticket -->

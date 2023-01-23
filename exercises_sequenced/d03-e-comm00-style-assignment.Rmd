@@ -40,7 +40,7 @@ summarize(group_by(diamonds, cut), mean_price = mean(price))
 ```{r q1-solution}
 diamonds %>%
   group_by(cut) %>%
-    summarize(mean_price = mean(price))
+  summarize(mean_price = mean(price))
 ```
 
 ### **q2** Re-write according to the style guide
