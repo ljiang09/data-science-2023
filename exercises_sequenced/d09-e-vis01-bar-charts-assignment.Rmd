@@ -94,6 +94,9 @@ mpg %>%
 
 **Observations**: - Write your observations here!
 
+-   The graph counts the number of each type of car, and color codes it.
+    Pretty basic but very easy to read
+
 ```{r q4-v2}
 ## TODO: Run this code without changing, describe your observations on the data
 mpg %>%
@@ -103,11 +106,19 @@ mpg %>%
 
 **Observations**: - Write your observations here!
 
+-   This displays another variable and maximizes the usage of color.
+    Rather than telling the same thing using both the x-axis and the
+    color, the x axis distinguishes between car classes and the color is
+    used to determine the drv.
+
 **Compare `v1` and `v2`**:
 
 -   Which visualization---`v1` or `v2`---enabled you to make more
     observations?
+    -   V2 did
 -   What was the difference between `v1` and `v2`?
+    -   V2 included a secondary variable: drv. More variables = more
+        observations
 
 ### **q4** The following code has a bug; it does not do what its author intended.
 
@@ -119,23 +130,24 @@ how to do this in a future exercise.
 
 ```{r q4-task}
 mpg %>%
-  ggplot(aes(x = manufacturer, fill = class), position = "dodge") +
-  geom_bar() +
+  ggplot(aes(x = manufacturer, fill = class)) +
+  geom_bar(position = "dodge") +
   theme(axis.text.x = element_text(angle = 270, vjust = 0.5, hjust = 0))
 ```
 
 **Observations** - Your observations here!
 
-### **q5** The following graph is hard to read. What other form of faceting would
+-   some companies only make specific cars. Hondas only make
+    subcompacts, jeeps/land rovers/etc only make SUV's, and such. Toyota
+    has the most variance with 4 types of cars
 
-make the visual more convenient to read? Modify the code below with your
-suggested improvement.
+### **q5** The following graph is hard to read. What other form of faceting would make the visual more convenient to read? Modify the code below with your suggested improvement.
 
 ```{r q5-task}
 mpg %>%
   ggplot(aes(x = cyl)) +
   geom_bar() +
-  facet_grid(~ manufacturer)
+  facet_wrap(~ manufacturer)
 ```
 
 <!-- include-exit-ticket -->
