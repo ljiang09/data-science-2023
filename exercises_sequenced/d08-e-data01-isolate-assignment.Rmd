@@ -60,7 +60,7 @@ print("Nice!")
 
 ```{r q2-task}
 df_q2 <- flights %>%
-  select(dest, origin, carrier, everything()) # TODO: Modify to move columns to the front
+  select(dest, origin, carrier, everything())
 df_q2
 ```
 
@@ -108,8 +108,12 @@ York city? Let's do a quick check to get an idea:
 ### **q5** Perform **two** filters; first
 
 ```{r q5-task}
-## df_q5a <- dest is JFK, LGA, or EWR
-## df_q5b <- origin is JFK, LGA, or EWR
+df_q5a <-
+  flights %>%
+    filter(dest == "JFK", dest == "LGA", dest == "EWR")
+df_q5b <-
+  flights %>% 
+    filter(origin == "JFK", origin == "LGA", origin == "EWR")
 ```
 
 Use the following code to check your answer.
@@ -143,9 +147,14 @@ collected the data. Thinking about these issues is partly what separates
 ### **q6** Sort the flights in *descending* order by their `air_time`. Bring `air_time, dest` to the front. What can you tell about the longest flights?
 
 ```{r q6-task}
-## df_q6 <- TODO: Your code here!
+df_q6 <- flights %>%
+  arrange(desc(air_time)) %>%
+  select(air_time, dest, everything())
 df_q6
 ```
+
+-   The longest flights are to HNL, or Honolulu. Hawaii is further than
+    the rest of the US, it seems
 
 ```{r q6-tests}
 ## NOTE: No need to change this!
