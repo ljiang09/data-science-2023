@@ -1,6 +1,6 @@
 Getting Started: Diamonds
 ================
-(Your name here)
+Lily Jiang
 2020-
 
 - <a href="#grading-rubric" id="toc-grading-rubric">Grading Rubric</a>

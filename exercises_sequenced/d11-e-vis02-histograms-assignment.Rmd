@@ -26,11 +26,11 @@ library(tidyverse)
 ### **q1** Using the graphs generated in the chunks `q1-vis1` and `q1-vis2` below, answer:
 
 -   Which `class` has the most vehicles?
-    -   SUV's seem to have the most values?
+    -   SUV's
 -   Which `class` has the broadest distribution of `cty` values?
-    -   Subcompact
+    -   subcompact - flattest curve
 -   Which graph---`vis1` or `vis2`---best helps you answer each question?
-    -   vis1 is good for question 1, vis2 is good for the 2nd question
+    -   vis1 is good for answering question 1, vis2 is good for question 2
 
 ```{r q1-vis1}
 ## NOTE: No need to modify
@@ -52,8 +52,9 @@ In the previous exercise, we learned how to *facet* a graph. Let's use that part
 
 ```{r q2-task}
 mpg %>%
-  ggplot(aes(cty, color = class), scales = "free_y") +
-  geom_density()
+  ggplot(aes(cty, color = class)) +
+  geom_density() +
+  facet_wrap(~class, scales = "free_y")
 ```
 
 In the reading, we learned that the "most important thing" to keep in mind with `geom_histogram()` and `geom_freqpoly()` is to *explore different binwidths*. We'll explore this idea in the next question.
@@ -75,11 +76,11 @@ diamonds %>%
 
 **Observations** - Write your observations here!
 
--   At 0.01 and lower, a clear repeating trend occurs where there are a lot of exact "round numbers" for carats (ie. 0.3, 0.4, 0.5, 0.7), and this curves off until the next round number
+-   with the smaller bin widths (around 0.01), the pattern clearly shows that there is a huge spike in number of diamonds with more "whole decimal" carats, like 0.3, 0.5, 0.7, etc. There are very little diamonds of carat sizes slightly less than these whole decimals, but a lot of carat sizes slightly more than them. The amount decreases exponentially.
 
--   This curving-off trend is not seen when bin width is 0.05, but you can kind of tell there are peaks in specific carat sizes
+-   With a bin width of 0.05, the exponential decreases aren't noticable, but the peaks are generally noticable
 
--   At bin width of 0.1, you can't really see much useful information
+-   with any larger of a bin width, you cannot tell where the peaks are
 
 <!-- include-exit-ticket -->
 
