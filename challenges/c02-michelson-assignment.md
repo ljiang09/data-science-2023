@@ -1,7 +1,7 @@
 Michelson Speed-of-light Measurements
 ================
-(Your name here)
-2020-
+Lily Jiang
+2023-02-04
 
 - [Grading Rubric](#grading-rubric)
   - [Individual](#individual)
