@@ -35,7 +35,7 @@ define how you will be graded, both on an individual and team basis.
 <!-- ------------------------- -->
 
 | Category    | Needs Improvement                                                                                                | Satisfactory                                                                                                               |
-|-------------|------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|
+|--------------|----------------------------|-------------------------------|
 | Effort      | Some task **q**'s left unattempted                                                                               | All task **q**'s attempted                                                                                                 |
 | Observed    | Did not document observations, or observations incorrect                                                         | Documented correct observations based on analysis                                                                          |
 | Supported   | Some observations not clearly supported by analysis                                                              | All observations clearly supported by analysis (table, graph, etc.)                                                        |
@@ -310,41 +310,22 @@ df_q2 %>%
 
 -   In the first graph I generated, I was looking to see if there was a
     correlation between the measured velocity (adjusted for a vacuum)
-    and the temperature. There initially doesn't seem to be any clear
-    correlation that can be derived, but if I unfocus my eyes I can see
-    a slight positive correlation. This indicates that a higher
-    temperature can result in a higher velocity measurement.
-    -   Michelson's estimated value for the speed of light is higher
-        than the modern speed of light, and this temperature difference
-        would explain it. He measured in temperatures far higher than 0
-        Kelvin, which is what exists in a true vacuum. Therefore, his
-        measurements were already overestimating the true value. On top
-        of that, he also added 92 km/s to his measurements, which is in
-        fact compensating in the wrong direction if we follow the
-        positive trend between temperature and measured velocity of
-        light.
+    and the temperature. If I unfocus my eyes, I can see a slight
+    positive correlation. However, the actual data is essentially a huge
+    cloud of scatter points, which means that the "positive correlation"
+    is not a very trustworthy analysis. It is not possible to conclude
+    that any relationship exists between measured velocity and
+    temperature.
 -   In the second graph I generated, I was looking to see if the
     measured velocity changed with the measurement's distinctness. I
-    used a box plot to display this information, since Distinctness is a
-    discrete variable and VelocityVacuum is a continuous variable for
-    our purposes. The mean velocity increases as the distinctness
+    used a box plot to display this information, since `Distinctness` is
+    a discrete variable and `VelocityVacuum` is a continuous variable
+    for our purposes. The mean velocity increases as the distinctness
     increases. Since a lack of distinctness suggests more inaccurate
     data, we can see that the more unclear the data, the more the
     measurement tends to underestimate the true value of the speed of
     light. This conclusion was drawn from looking at the means of the
     boxplots.
-    -   In my interpretation, this trend demonstrated in the second plot
-        actually contradicted the fact that Michelson overestimated the
-        speed of light. Because a worse distinction implies a lower
-        measured speed (according to the plot), I'd intuitively think
-        that Michelson's prediction would be less than the real speed of
-        light. However, all values across the three distinctnesses are
-        far above the modern speed of light anyways. We already
-        determined from the first plot that a higher temperature led to
-        a higher speed of light, which accounts for this. So because all
-        the values are already quite greater than the expected value,
-        the trend observed doesn't actually help to explain the
-        difference between Michelson's and the expected speed of light.
 
 ## Bibliography
 
