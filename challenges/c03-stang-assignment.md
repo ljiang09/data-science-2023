@@ -255,17 +255,97 @@ summary(df_stang_long)
     ##  3rd Qu.:0.3277  
     ##  Max.   :0.3310
 
+``` r
+df_stang_long %>% distinct(E)
+```
+
+    ## # A tibble: 8 × 1
+    ##       E
+    ##   <int>
+    ## 1 10600
+    ## 2 10700
+    ## 3 10500
+    ## 4 10400
+    ## 5 10300
+    ## 6 10000
+    ## 7  9900
+    ## 8 10100
+
+``` r
+df_stang_long %>% distinct(nu)
+```
+
+    ## # A tibble: 18 × 1
+    ##       nu
+    ##    <dbl>
+    ##  1 0.321
+    ##  2 0.329
+    ##  3 0.31 
+    ##  4 0.323
+    ##  5 0.331
+    ##  6 0.318
+    ##  7 0.322
+    ##  8 0.319
+    ##  9 0.326
+    ## 10 0.33 
+    ## 11 0.327
+    ## 12 0.328
+    ## 13 0.32 
+    ## 14 0.315
+    ## 15 0.314
+    ## 16 0.312
+    ## 17 0.316
+    ## 18 0.311
+
+``` r
+df_stang_long %>% distinct(alloy)
+```
+
+    ## # A tibble: 1 × 1
+    ##   alloy  
+    ##   <chr>  
+    ## 1 al_24st
+
+``` r
+df_stang_long %>% distinct(angle)
+```
+
+    ## # A tibble: 3 × 1
+    ##   angle
+    ##   <int>
+    ## 1     0
+    ## 2    45
+    ## 3    90
+
+``` r
+df_stang_long %>% distinct(thick)
+```
+
+    ## # A tibble: 4 × 1
+    ##   thick
+    ##   <dbl>
+    ## 1 0.022
+    ## 2 0.032
+    ## 3 0.064
+    ## 4 0.081
+
 **Observations**:
 
 - Is there “one true value” for the material properties of Aluminum?
-  - No; all of the properties have some spread
+  - No; all of the properties have some spread. Using the `distinct`
+    function on `E` and `nu` demonstrates that there are several values
+    for both.
 - How many aluminum alloys are in this dataset? How do you know?
   - Just 1, since in the `alloy` column there is only one repeating
-    alloy listed: `al_24st`
+    alloy listed: `al_24st`. This was verified by finding the number of
+    distinct alloy values in the table, which produces a table with only
+    one value.
 - What angles were tested?
-  - 0, 45, and 90 degrees
+  - 0, 45, and 90 degrees. We can tell because the `distinct` function
+    shows only those 3 different angles.
 - What thicknesses were tested?
-  - 0.022, 0.032, 0.064, and 0.081 of whatever unit the data uses
+  - 0.022, 0.032, 0.064, and 0.081 of whatever unit the data uses. Again
+    this is based on the `distinct` function
 - What is the relationship between the aluminum `thickness` and the
   measured `E`?
 
@@ -286,10 +366,17 @@ ggplot(data = df_stang_long) +
 
 - There doesn’t appear to be a clear linear correlation between
   thickness and E (elasticity). However, the elasticities tend to
-  coagulate into the same range of values for each sample thickness.
-  Because of this pattern, it appears that there is a relationship
-  between thickness and modulus of elasticity, but this relationship is
-  more complex than a simple linear regression line could determine.
+  coagulate into the same range of values for each sample thickness. It
+  is plausible that there is in fact no relationship at all between
+  thickness and elasticity, and instead there was a difference in
+  measurement methods for the 0.081 samples versus the rest of the
+  samples that caused such a drastic change in measurements.
+- I could also see another possibility that there *is* indeed a
+  (negative) correlation between thickness and elasticity, as all the
+  elasticities trend downward as thickness increases, except where
+  `thick = 0.064`. Here, the samples of `thick = 0.064` might’ve been
+  measured differently than the rest, causing it to fall above the
+  trend.
 
 ### **q4** Consider the following statement:
 

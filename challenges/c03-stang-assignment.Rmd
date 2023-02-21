@@ -26,7 +26,7 @@ Unlike exercises, **challenges will be graded**. The following rubrics define ho
 <!-- ------------------------- -->
 
 | Category    | Needs Improvement                                                                                                | Satisfactory                                                                                                               |
-|------------------|-----------------------------|-------------------------|
+|-------------------|-----------------------------|-------------------------|
 | Effort      | Some task **q**'s left unattempted                                                                               | All task **q**'s attempted                                                                                                 |
 | Observed    | Did not document observations, or observations incorrect                                                         | Documented correct observations based on analysis                                                                          |
 | Supported   | Some observations not clearly supported by analysis                                                              | All observations clearly supported by analysis (table, graph, etc.)                                                        |
@@ -118,18 +118,24 @@ print("Very good!")
 ```{r q2-task}
 glimpse(df_stang_long)
 summary(df_stang_long)
+
+df_stang_long %>% distinct(E)
+df_stang_long %>% distinct(nu)
+df_stang_long %>% distinct(alloy)
+df_stang_long %>% distinct(angle)
+df_stang_long %>% distinct(thick)
 ```
 
 **Observations**:
 
 -   Is there "one true value" for the material properties of Aluminum?
-    -   No; all of the properties have some spread
+    -   No; all of the properties have some spread. Using the `distinct` function on `E` and `nu` demonstrates that there are several values for both.
 -   How many aluminum alloys are in this dataset? How do you know?
-    -   Just 1, since in the `alloy` column there is only one repeating alloy listed: `al_24st`
+    -   Just 1, since in the `alloy` column there is only one repeating alloy listed: `al_24st`. This was verified by finding the number of distinct alloy values in the table, which produces a table with only one value.
 -   What angles were tested?
-    -   0, 45, and 90 degrees
+    -   0, 45, and 90 degrees. We can tell because the `distinct` function shows only those 3 different angles.
 -   What thicknesses were tested?
-    -   0.022, 0.032, 0.064, and 0.081 of whatever unit the data uses
+    -   0.022, 0.032, 0.064, and 0.081 of whatever unit the data uses. Again this is based on the `distinct` function
 -   What is the relationship between the aluminum `thickness` and the measured `E`?
 
 ## Visualize
@@ -145,7 +151,8 @@ ggplot(data = df_stang_long) +
 
 **Observations**:
 
--   There doesn't appear to be a clear linear correlation between thickness and E (elasticity). However, the elasticities tend to coagulate into the same range of values for each sample thickness. Because of this pattern, it appears that there is a relationship between thickness and modulus of elasticity, but this relationship is more complex than a simple linear regression line could determine.
+-   There doesn't appear to be a clear linear correlation between thickness and E (elasticity). However, the elasticities tend to coagulate into the same range of values for each sample thickness. It is plausible that there is in fact no relationship at all between thickness and elasticity, and instead there was a difference in measurement methods for the 0.081 samples versus the rest of the samples that caused such a drastic change in measurements.
+-   I could also see another possibility that there *is* indeed a (negative) correlation between thickness and elasticity, as all the elasticities trend downward as thickness increases, except where `thick = 0.064`. Here, the samples of `thick = 0.064` might've been measured differently than the rest, causing it to fall above the trend.
 
 ### **q4** Consider the following statement:
 
