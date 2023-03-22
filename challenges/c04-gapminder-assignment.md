@@ -1,7 +1,7 @@
 Gapminder
 ================
 Lily Jiang
-2023-02-26
+2023-03-20
 
 - [Grading Rubric](#grading-rubric)
   - [Individual](#individual)
@@ -126,15 +126,12 @@ glimpse(gapminder)
 (Rather than the `$` notation of base R.)
 
 ``` r
-## TASK: Find the largest and smallest values of `year` in `gapminder`
 year_max <- gapminder %>%
-  filter(dense_rank(desc(year)) == 1) %>%
-  pull(year) %>%
-  unique()
+  summarize(year = max(year)) %>%
+  pull(year)
 year_min <- gapminder %>%
-  filter(dense_rank(year) == 1) %>%
-  pull(year) %>%
-  unique()
+  summarize(year = min(year)) %>%
+  pull(year)
 
 year_min
 ```
@@ -189,10 +186,10 @@ can.
 gapminder %>%
   filter(year == year_min) %>%
   ggplot() +
-  geom_violin(
-    aes(x = continent, y = gdpPercap),
-    draw_quantiles = c(0.25, 0.5, 0.75)
-  )
+  geom_boxplot(
+    aes(x = continent, y = gdpPercap)
+  ) +
+  scale_y_log10()
 ```
 
 ![](c04-gapminder-assignment_files/figure-gfm/q2-task-1.png)<!-- -->
@@ -201,7 +198,8 @@ gapminder %>%
 
 - Most of Africa’s countries have a low GDP per capita, which results in
   a skewed-right spread. The maximum GDP per capita for Africa is
-  actually the lowest out of all the continents.
+  actually the lowest out of the max GDP per capita for all the
+  continents.
 - The Americas have a skewed-right spread, with most of the points
   falling on the lower end of the GDP per capita spectrum. However, the
   values are slightly more spread out than in Africa, as indicated by
@@ -231,16 +229,18 @@ gapminder %>%
   realized this didn’t actually display the actual data because I wasn’t
   counting a sum of something for each continent; rather, each continent
   had multiple points that needed to be plotted on their own.
-- Thus, I switched to a boxplot. This immediately posed a challenge
-  because Asia had one HUGE outlier that was magnitudes higher than any
-  other point being plotted, causing the scale to zoom out quite a lot.
-  Thus, most of the interesting data was squashed into incomprehensible
-  rectangles at the bottom of the graph.
-- Lastly, I tried using a violin plot, as hopefully it would not show as
-  much overlap in everything. This ended up working the best, especially
-  when I added the `0.25, 0.5, 0.75` quartile lines to it to see the
-  mean and IQR range. Because the violin plot changes width based on the
-  approximate height, the general spread of values was more visible.
+- I tried using a regular boxplot and a violin plot. However, Asia had a
+  HUGE outlier that was magnitudes higher than any other point being
+  plotted, causing the scale to zoom out quite a lot. Thus, most of the
+  interesting data was squashed into incomprehensible rectangles at the
+  bottom of the graph. The violin plot was easier to see because some
+  information could be seen with the width of the plot, but still was
+  overall very hard to see.
+- Lastly, I tried using a logarithmic scale on the y axis. This was the
+  best solution, as it allowed me to (for the most part) clearly see the
+  quartiles. Except for Australia, which has consistently stayed as a
+  flat line, indicating that there is extremely little variation amongst
+  those points.
 
 ### **q3** You should have found *at least* three outliers in q2 (but possibly many more!). Identify those outliers (figure out which countries they are).
 
@@ -356,56 +356,76 @@ gapminder %>%
 variables; think about using different aesthetics or facets.
 
 ``` r
-gapminder %>%
-  filter(year == year_min) %>%
+subset(gapminder, year %in% c(year_max, year_min)) %>%
   ggplot(aes(x = continent, y = gdpPercap)) +
-  geom_violin(
-    draw_quantiles = c(0.25, 0.5, 0.75),
-    color = "red"
+  geom_boxplot(
+    aes(x = continent, y = gdpPercap, color = factor(year)),
+    position=position_dodge(width=.8)
   ) +
   geom_point(
-    data = . %>% filter(country %in% c("Kuwait", "United States", "Canada")),
-    mapping = aes(color = country),
+    data = . %>% filter(country == "Kuwait"),
+    aes(color = "Kuwait"),
+    position=position_dodge2(width=.8),
     size = 2
   ) +
-  coord_flip()
+  geom_point(
+    data = . %>% filter(country == "United States"),
+    aes(color = "United States"),
+    position=position_dodge2(width=.8),
+    size = 2
+  ) +
+  geom_point(
+    data = . %>% filter(country == "Canada"),
+    aes(color = "Canada"),
+    position=position_dodge2(width=.8),
+    size = 2
+  ) +
+  xlab("Country") + ylab("GDP Per Capita") +
+  scale_color_discrete(name="Year") +
+  coord_flip() +
+  scale_y_log10() +
+  labs(color = "Countries and Year") +
+  scale_color_manual(values = c("1952" = "#898121", "2007" = "#9E4784", "Kuwait" = "orange", "United States" = "blue", "Canada" = "red"))
 ```
+
+    ## Scale for colour is already present.
+    ## Adding another scale for colour, which will replace the existing scale.
 
 ![](c04-gapminder-assignment_files/figure-gfm/q4-task-1.png)<!-- -->
 
-``` r
-gapminder %>%
-  filter(year == year_max) %>%
-  ggplot(aes(x = continent, y = gdpPercap)) +
-  geom_violin(
-    draw_quantiles = c(0.25, 0.5, 0.75),
-    color = "blue"
-  ) +
-  geom_point(
-    data = . %>% filter(country %in% c("Kuwait", "United States", "Canada")),
-    mapping = aes(color = country),
-    size = 2
-  ) +
-  coord_flip()
-```
-
-![](c04-gapminder-assignment_files/figure-gfm/q4-task-2.png)<!-- -->
-
 **Observations**:
 
-- First, I realized that I could flip the coordinates to make the violin
-  plots slightly more readable than previously.
-- After plotting the countries and 3 outliers for `year_max` and
-  `year_min`, I realized that the same top outliers I found in the
-  `year_min` plot were roughly in the same place as in the `year_max`
-  plot. Kuwait and the US are at the maximums of Africa and the Americas
-  (respectively), and Canada is the second highest outlier of the
-  Americas.
-- I also noticed that the shapes of the plots between the two years are
-  VERY similar. With the exception of Europe, which had a bulge more on
-  the lower end in `year_min` but has the bulge on the upper end in
-  `year_max`, all of the continents maintain similar distributions
-  between the two years.
+- First, I realized that I could flip the coordinates to make the box
+  plots slightly more readable than previously. I also made sure to
+  continue using the log scale on the first plot, as there were again
+  huge outliers within the Asia dataset. I plotted the max and min year
+  on the same plot, but set position widths so the two years would sit
+  side by side. This allowed for direct comparisons between the two
+  years, while not covering any important information.
+- From q3, I identified the outlier countries to be Kuwait, the US, and
+  Canada. I specifically plotted these as individually-colored points on
+  top of the existing boxplots, which allowed me to clearly see where
+  they existed (basically, how much of an outlier they are).
+- Overall, the boxplots I made highlighted an important pattern: the GDP
+  per capita increased over time. For all the continents, the GDP per
+  capita is distinctively higher in 2007 than it is in 1952. This is
+  obvious because the means are higher, and also the overall boxes are
+  shifted more towards the right for 2007.
+- The boxplot shapes illustrate another general pattern. Except for
+  Europe, the spread of GDP per capitas is higher in 2007 than in 1952.
+  This is evident from the sizes of the boxes as well as the length of
+  the whiskers, which are noticeably larger in 2007 (except for in
+  Europe, where the boxes appear to be the same size and the whiskers
+  seem to be *smaller*).
+- For specific countries, the GDP per capita pattern I found across the
+  two years doesn’t necessarily exist. In particular, Kuwait’s GDP per
+  capita *decreased* from 1952 to 2007. Specifically plotting Kuwait as
+  an outlier helped me see this quickly.
+- The same countries I found as outliers in `year_min` were still
+  outliers in `year_max`. In fact, they appear to follow the same
+  “ordering” within their respective continent: Kuwait is the top
+  outlier for Asia, and in the Americas, the US is the top outlier while
+  Canada is the second-highest.
 
 # Your Own EDA
 
@@ -430,9 +450,9 @@ gapminder %>%
 
 - Oceania, much like with the GDP per capita plot, has a very narrow
   range of values compared to the rest of the continents.
-- The order of mean life expectancies, from highest to lowest, is:
+- The order of median life expectancies, from highest to lowest, is:
   Oceania, Europe, Americas, Asia, Africa. This is very similar to the
-  ordering of mean GDP per capitas for `year_min`.
+  ordering of median GDP per capitas for `year_min`.
 - Only Europe and Africa have outliers. Europe’s outliers is on the
   lower end, while Africa’s outlier is on the upper end.
 
