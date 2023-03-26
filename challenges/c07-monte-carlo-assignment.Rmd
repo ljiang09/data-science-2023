@@ -1,7 +1,7 @@
 ---
 title: "Estimating Pi With a Shotgun"
-author: "(Your name here)"
-date: 2020-
+author: "Lily Jiang"
+date: 2023-3-26
 output:
   github_document:
     toc: true
@@ -12,24 +12,28 @@ prerequisites:
 *Purpose*: Random sampling is extremely powerful. To build more intuition for how we can use random sampling to solve problems, we'll tackle what---at first blush---doesn't seem appropriate for a random approach: estimating fundamental deterministic constants. In this challenge you'll work through an example of turning a deterministic problem into a random sampling problem, and practice quantifying uncertainty in your estimate.
 
 <!-- include-rubric -->
+
 # Grading Rubric
+
 <!-- -------------------------------------------------- -->
 
 Unlike exercises, **challenges will be graded**. The following rubrics define how you will be graded, both on an individual and team basis.
 
 ## Individual
+
 <!-- ------------------------- -->
 
-| Category | Needs Improvement | Satisfactory |
-|----------|----------------|--------------|
-| Effort | Some task __q__'s left unattempted | All task __q__'s attempted |
-| Observed | Did not document observations, or observations incorrect | Documented correct observations based on analysis |
-| Supported | Some observations not clearly supported by analysis | All observations clearly supported by analysis (table, graph, etc.) |
-| Assessed | Observations include claims not supported by the data, or reflect a level of certainty not warranted by the data | Observations are appropriately qualified by the quality & relevance of the data and (in)conclusiveness of the support |
-| Specified | Uses the phrase "more data are necessary" without clarification | Any statement that "more data are necessary" specifies which *specific* data are needed to answer what *specific* question |
-| Code Styled | Violations of the [style guide](https://style.tidyverse.org/) hinder readability | Code sufficiently close to the [style guide](https://style.tidyverse.org/) |
+| Category    | Needs Improvement                                                                                                | Satisfactory                                                                                                               |
+|-------------------|-----------------------------|-------------------------|
+| Effort      | Some task **q**'s left unattempted                                                                               | All task **q**'s attempted                                                                                                 |
+| Observed    | Did not document observations, or observations incorrect                                                         | Documented correct observations based on analysis                                                                          |
+| Supported   | Some observations not clearly supported by analysis                                                              | All observations clearly supported by analysis (table, graph, etc.)                                                        |
+| Assessed    | Observations include claims not supported by the data, or reflect a level of certainty not warranted by the data | Observations are appropriately qualified by the quality & relevance of the data and (in)conclusiveness of the support      |
+| Specified   | Uses the phrase "more data are necessary" without clarification                                                  | Any statement that "more data are necessary" specifies which *specific* data are needed to answer what *specific* question |
+| Code Styled | Violations of the [style guide](https://style.tidyverse.org/) hinder readability                                 | Code sufficiently close to the [style guide](https://style.tidyverse.org/)                                                 |
 
 ## Due Date
+
 <!-- ------------------------- -->
 
 All the deliverables stated in the rubrics above are due **at midnight** before the day of the class discussion of the challenge. See the [Syllabus](https://docs.google.com/document/d/1qeP6DUS8Djq_A0HMllMqsSqX3a9dbcx1/edit?usp=sharing&ouid=110386251748498665069&rtpof=true&sd=true) for more information.
@@ -41,6 +45,7 @@ library(tidyverse)
 *Background*: In 2014, some crazy Quebecois physicists estimated $\pi$ with a pump-action shotgun[1,2]. Their technique was based on the *Monte Carlo method*, a general strategy for turning deterministic problems into random sampling.
 
 # Monte Carlo
+
 <!-- -------------------------------------------------- -->
 
 The [Monte Carlo method](https://en.wikipedia.org/wiki/Monte_Carlo_method) is the use of randomness to produce approximate answers to deterministic problems. Its power lies in its simplicity: So long as we can take our deterministic problem and express it in terms of random variables, we can use simple random sampling to produce an approximate answer. Monte Carlo has an [incredible number](https://en.wikipedia.org/wiki/Monte_Carlo_method#Applications) of applications; for instance Ken Perlin won an [Academy Award](https://en.wikipedia.org/wiki/Perlin_noise) for developing a particular flavor of Monte Carlo for generating artificial textures.
@@ -50,6 +55,7 @@ I remember when I first learned about Monte Carlo, I thought the whole idea was 
 In this challenge, we'll tackle a deterministic problem (computing $\pi$) with the Monte Carlo method.
 
 ## Theory
+
 <!-- ------------------------- -->
 
 The idea behind estimating $\pi$ via Monte Carlo is to set up a probability estimation problem whose solution is related to $\pi$. Consider the following sets: a square with side length one $St$, and a quarter-circle $Sc$.
@@ -91,48 +97,65 @@ $$\mathbb{P}_{X}[X \in Sc] = (\pi / 4) / 1 = \frac{\pi}{4}.$$
 This expression is our ticket to estimating $\pi$ with a source of randomness: If we estimate the probability above and multiply by $4$, we'll be estimating $\pi$.
 
 ## Implementation
+
 <!-- ------------------------- -->
 
 Remember in `e-stat02-probability` we learned how to estimate probabilities as the limit of frequencies. Use your knowledge from that exercise to generate Monte Carlo data.
 
-### __q1__ Pick a sample size $n$ and generate $n$ points *uniform randomly* in the square $x \in [0, 1]$ and $y \in [0, 1]$. Create a column `stat` whose mean will converge to $\pi$.
+### **q1** Pick a sample size $n$ and generate $n$ points *uniform randomly* in the square $x \in [0, 1]$ and $y \in [0, 1]$. Create a column `stat` whose mean will converge to $\pi$.
 
 *Hint*: Remember that the mean of an *indicator function* on your target set will estimate the probability of points landing in that area (see `e-stat02-probability`). Based on the expression above, you'll need to *modify* that indicator to produce an estimate of $\pi$.
 
 ```{r q1-task}
-## TASK: Choose a sample size and generate samples
-n <- NA_real_ # Choose a sample size
-df_q1 <- NA # Generate the data
+set.seed(100)
+n <- 1000 # Choose a sample size
+df_q1 <- tibble(
+  x = runif(n, min = 0, max = 1),
+  y = runif(n, min = 0, max = 1),
+  stat = ifelse(x^2 + y^2 < 1, 4, 0)
+) # Generate the data
+
+df_q1
 ```
 
-### __q2__ Using your data in `df_q1`, estimate $\pi$.
+### **q2** Using your data in `df_q1`, estimate $\pi$.
 
 ```{r q2-task}
-## TASK: Estimate pi using your data from q1
-pi_est <- NA_real_
+pi_est <- df_q1 %>%
+  pull(stat) %>%
+  mean()
 pi_est
 ```
 
 # Quantifying Uncertainty
+
 <!-- -------------------------------------------------- -->
 
 You now have an estimate of $\pi$, but how trustworthy is that estimate? In `e-stat06-clt` we discussed *confidence intervals* as a means to quantify the uncertainty in an estimate. Now you'll apply that knowledge to assess your $\pi$ estimate.
 
-### __q3__ Using a CLT approximation, produce a confidence interval for your estimate of $\pi$. Make sure you specify your confidence level. Does your interval include the true value of $\pi$? Was your chosen sample size sufficiently large so as to produce a trustworthy answer?
+### **q3** Using a CLT approximation, produce a confidence interval for your estimate of $\pi$. Make sure you specify your confidence level. Does your interval include the true value of $\pi$? Was your chosen sample size sufficiently large so as to produce a trustworthy answer?
 
 ```{r q3-task}
+confidence_level <- 0.99
+
+lo <- pi_est - qnorm( 1 - (1 - confidence_level) / 2 ) * sd(df_q1 %>% pull(stat)) / sqrt(nrow(df_q1))
+hi <- pi_est + qnorm( 1 - (1 - confidence_level) / 2 ) * sd(df_q1 %>% pull(stat)) / sqrt(nrow(df_q1))
+
+lo
+hi
 ```
 
 **Observations**:
 
-- Does your interval include the true value of $\pi$?
-  - (Your response here)
-- What confidence level did you choose?
-  - (Your response here)
-- Was your sample size $n$ large enough? Why do you say that?
-  - (Your response here)
+-   Does your interval include the true value of $\pi$?
+    -   It does, 3.14 \> 2.955 and 3.14 \< 3.228
+-   What confidence level did you choose?
+    -   I chose a confidence level of 99%, as that allowed for a large range and would therefore have a good chance of including the true value of pi within it.
+-   Was your sample size $n$ large enough? Why do you say that?
+    -   I would say that a sample size of 1000 is large enough, as my confidence interval not only includes the real value of pi but also extends relatively broadly past it. This means that if the randomly-generated sample was somehow skewed, it is likely that the real value of pi will still fall within the interval. Of course, larger samples are always better for statistical precision (like narrowing the confidence interval), but it appears that 1000 is a reasonable size to catch the true value of pi.
 
 # References
+
 <!-- -------------------------------------------------- -->
 
 [1] Dumoulin and Thouin, "A Ballistic Monte Carlo Approximation of Pi" (2014) ArXiv, [link](https://arxiv.org/abs/1404.1499)
