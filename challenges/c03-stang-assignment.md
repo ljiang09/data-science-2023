@@ -1,7 +1,7 @@
 Aluminum Data
 ================
 Lily Jiang
-2023-02-12
+2023-04-06
 
 - [Grading Rubric](#grading-rubric)
   - [Individual](#individual)
@@ -366,17 +366,14 @@ ggplot(data = df_stang_long) +
 
 - There doesn’t appear to be a clear linear correlation between
   thickness and E (elasticity). However, the elasticities tend to
-  coagulate into the same range of values for each sample thickness. It
-  is plausible that there is in fact no relationship at all between
-  thickness and elasticity, and instead there was a difference in
-  measurement methods for the 0.081 samples versus the rest of the
-  samples that caused such a drastic change in measurements.
-- I could also see another possibility that there *is* indeed a
-  (negative) correlation between thickness and elasticity, as all the
-  elasticities trend downward as thickness increases, except where
-  `thick = 0.064`. Here, the samples of `thick = 0.064` might’ve been
-  measured differently than the rest, causing it to fall above the
-  trend.
+  coagulate into the same range of values for each sample thickness, as
+  the spread of values is usually limited to 200. It is plausible that
+  there is in fact no relationship at all between thickness and
+  elasticity, and instead there was a difference in measurement methods
+  for the 0.081 thick samples that caused such a drastic change in
+  measurements. In fact, Zachary del Rosario himself told me that the
+  thickest plates were measured using a different technique, making them
+  suspicious, which verifies my original thoughts.
 
 ### **q4** Consider the following statement:
 
