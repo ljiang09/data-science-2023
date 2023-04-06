@@ -162,6 +162,7 @@ df_antibiotics %>%
   ggplot() +
   geom_jitter(aes(x = type, y = value, color = gram, shape = type)) +
   facet_wrap(~gram, scales = "free_y") +
+  scale_y_log10() +
   theme(legend.position = "none")
 ```
 
@@ -184,7 +185,8 @@ df_antibiotics %>%
     values_to = "value"
   ) %>%
   ggplot() +
-  geom_col(aes(x = type, y = value, color = type, fill = type)) +
+  geom_col(aes(x = type, y = value, color = gram, fill = type)) +
+  scale_y_log10() +
   facet_wrap(~bacteria, scales = "free_y") +
   theme(axis.text.x=element_blank())
 ```
@@ -222,6 +224,7 @@ df_antibiotics %>%
   mutate(avg = rowSums(df_antibiotics[, c(2, 3, 4)], na.rm=TRUE) / 3) %>%
   ggplot() +
   geom_point(aes(x = bacteria, y = avg)) +
+  scale_y_log10() +
   coord_flip() +
   ggtitle("Average MICs across penicillin, streptomycin, & neomycin")
 ```
@@ -275,44 +278,41 @@ opportunity to think about why this is.**
 
 - What is your response to the question above?
 
-  - Penicillin negative is extremely ineffective against 4 strains of
+  - Penicillin is extremely ineffective against 4 strains of negative
     bacteria (much more so than any other antibiotic and gram stain
-    combination). This is indicated by the high MIC values - well
+    combination). This is indicated by the high MIC values that are well
     over 750. In comparison to the rest of the data (most with MIC
     values under 100), this is massive.
 
-  - Penicillin positive, on the other hand, appears to be quite
-    effective against all the bacteria it was tested on. Many of the
-    data points appear to fall at or very close to 0. None of the points
-    are visually extreme outliers like the four in the penicillin
-    negative plot.
+  - On the other hand, penicillin appears to be quite effective against
+    all the positively-stained bacteria it was tested on. All points
+    except for one fall below the threshold of 0.1, which counts as
+    effective for human treatment. The remaining point falls at/near 1,
+    which is still low compared to the negative gram values even if it
+    isn’t suitable for human treatment.
 
-  - Streptomycin positive has points that appear to all lie quite
-    closely to 0, which supposedly indicates that streptomycin positive
-    is effective against the bacteria it was tested on. I will make a
-    note though that the visualization I am referencing has an oversized
-    scale, up to probably 900, compared to the points I am looking at,
-    which are probably less than 10. This makes it extremely difficult
-    to see how much these points vary, and whether they are actually
-    close to the 0.1 threshold or not.
+  - On negatively-stained bacteria, Streptomycin is not suitable to
+    treat any of the bacteria. All of the points except 1 fall above
+    0.1. One point does fall extremely close to 0.1, but because I can’t
+    accurately determine if it is above or below I don’t want to jump to
+    any conclusions.
 
-  - Streptomycin negative appears to have quite a large spread of
-    values. One bacteria’s MIC value is at 40, a couple are at 10, and
-    the rest appear to be quite close to 0. Because there are a few
-    points that are not visually close to 0, it can be said that
-    streptomycin is not a consistently effective treatment against these
-    bacteria with a negative stain.
+  - Tested on positively stained bacteria, Streptomycin has only 2
+    points falling below 0.1. The majority (4 points) definitively fall
+    above this threshold. One point falls extremely close to the
+    threshold, and based on my eyeballing appears to be above it. But
+    because it is not obvious, I am not going to make any solid
+    conclusions about it. As most of the points here are above the
+    threshold, I would say Streptomycin is not super effective against
+    the positive-stain bacteria overall.
 
-  - Neomycin positive, much like Streptomycin positive, has points that
-    all appear to be close to 0. This implies that Neomycin positive is
-    an effective treatment to all the bacteria. However, it is again
-    important to point out that the y scale of the graph is much higher
-    than whatever scale the Neomycin positive MIC values are operating
-    on. This makes it hard to analyze differences of 10 or less.
-
-  - Neomycin negative is pretty effective for most bacteria, as many of
-    the MIC values are close to 0. Only 2 bacteria, it seems, have high
-    values close to 10 that indicate a lack of effectiveness.
+  - Neomycin is only somewhat effective for both negatively- and
+    positively-stained bacteria, which I say because there is almost an
+    even split between points falling above/below 0.1 for both. A few
+    points do visually fall on the 0.1 marker: two for negative bacteria
+    and one for positive. Because of this, it is hard to tell if
+    Neomycin meets the threshold requirements to be considered effective
+    against these bacteria or not.
 
 - Which of your visuals above (1 through 5) is **most effective** at
   helping to answer this question? Why?
