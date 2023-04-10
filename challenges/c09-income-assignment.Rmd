@@ -235,7 +235,7 @@ One last wrangling step: We need to join the two datasets so we can compare popu
 
 df_data <-
   df_q4 %>%
-  left_join(df_pop, by = c("id" = "Geography"))
+  left_join(df_pop, by = c("id" = "Geography", "geographic_area_name" = "Geographic Area Name"))
 
 df_data
 ```
@@ -315,24 +315,25 @@ Now it's your turn! You have income data for every county in the United States: 
 ```{r q8-task}
 ## TODO: Pose and answer your own question about the data
 
-# df_data %>%
-#   separate(
-#     col = category,
-#     sep = "-",
-#     into = c("family_size", "redundant")
-#   ) %>%
-#   select(-redundant) %>%
-#   mutate(family_size = as.integer(family_size)) %>%
-#   select(family_size, population_estimate) %>%
-#   summarize(avg_size = mean("family_size")) %>%
-#   ggplot(aes(x = family_size, y = population_estimate)) +
-#   geom_point()
+df_data %>%
+  mutate(
+    confidence_range = income_hi - income_lo
+  ) %>%
+  separate(
+    col = category,
+    sep = "-",
+    into = c("household_size", "redundant")
+  ) %>%
+  select(household_size, population_estimate, geographic_area_name, confidence_range, -redundant) %>%
+  ggplot(aes(x = household_size, y = confidence_range), group = household_size) +
+  geom_violin(draw_quantiles = c(0.25, 0.5, 0.75)) +
+  scale_y_continuous(trans='log10')
 ```
 
 **Observations**:
 
--   My original question was: how does the median house size compare with the population across all counties in the US?
--   Based on the scatter plot I created, \_\_\_\_\_
+-   My original question was: how does the household size compare with the range of the confidence interval across all counties in the US?
+-   Based on the violin plot I created, it appears that a higher household size correlates to a higher confidence interval. It is my theory that the logic behind this is that there are simply more data points for smaller households. It goes back to the same idea as why the previous graph looked that way. If anything I wonder if this plot is revealing anything new/useful compared to the original plot we saw.
 
 Ideas:
 

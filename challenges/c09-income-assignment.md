@@ -450,30 +450,30 @@ compare population with income.
 ``` r
 df_data <-
   df_q4 %>%
-  left_join(df_pop, by = c("id" = "Geography"))
+  left_join(df_pop, by = c("id" = "Geography", "geographic_area_name" = "Geographic Area Name"))
 
 df_data
 ```
 
-    ## # A tibble: 15,286 × 15
-    ##    id    geogr…¹ categ…² incom…³ incom…⁴ incom…⁵ incom…⁶ incom…⁷ incom…⁸ Geogr…⁹
-    ##    <chr> <chr>   <chr>     <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl> <chr>  
-    ##  1 0500… Autaug… 2-pers…   64947    6663   4050.  0.0624  54514.  75380. Autaug…
-    ##  2 0500… Autaug… 3-pers…   80172   14181   8621.  0.108   57967. 102377. Autaug…
-    ##  3 0500… Autaug… 4-pers…   85455   10692   6500.  0.0761  68713. 102197. Autaug…
-    ##  4 0500… Autaug… 5-pers…   88601   20739  12607.  0.142   56127. 121075. Autaug…
-    ##  5 0500… Autaug… 6-pers…  103787   12387   7530.  0.0726  84391. 123183. Autaug…
-    ##  6 0500… Baldwi… 2-pers…   63975    2297   1396.  0.0218  60378.  67572. Baldwi…
-    ##  7 0500… Baldwi… 3-pers…   79390    8851   5381.  0.0678  65531.  93249. Baldwi…
-    ##  8 0500… Baldwi… 4-pers…   88458    5199   3160.  0.0357  80317.  96599. Baldwi…
-    ##  9 0500… Baldwi… 5-pers…   91259    7011   4262.  0.0467  80281. 102237. Baldwi…
-    ## 10 0500… Baldwi… 6-pers…   69609   23175  14088.  0.202   33320. 105898. Baldwi…
-    ## # … with 15,276 more rows, 5 more variables: population_estimate <dbl>,
+    ## # A tibble: 15,286 × 14
+    ##    id    geogr…¹ categ…² incom…³ incom…⁴ incom…⁵ incom…⁶ incom…⁷ incom…⁸ popul…⁹
+    ##    <chr> <chr>   <chr>     <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>
+    ##  1 0500… Autaug… 2-pers…   64947    6663   4050.  0.0624  54514.  75380.   55200
+    ##  2 0500… Autaug… 3-pers…   80172   14181   8621.  0.108   57967. 102377.   55200
+    ##  3 0500… Autaug… 4-pers…   85455   10692   6500.  0.0761  68713. 102197.   55200
+    ##  4 0500… Autaug… 5-pers…   88601   20739  12607.  0.142   56127. 121075.   55200
+    ##  5 0500… Autaug… 6-pers…  103787   12387   7530.  0.0726  84391. 123183.   55200
+    ##  6 0500… Baldwi… 2-pers…   63975    2297   1396.  0.0218  60378.  67572.  208107
+    ##  7 0500… Baldwi… 3-pers…   79390    8851   5381.  0.0678  65531.  93249.  208107
+    ##  8 0500… Baldwi… 4-pers…   88458    5199   3160.  0.0357  80317.  96599.  208107
+    ##  9 0500… Baldwi… 5-pers…   91259    7011   4262.  0.0467  80281. 102237.  208107
+    ## 10 0500… Baldwi… 6-pers…   69609   23175  14088.  0.202   33320. 105898.  208107
+    ## # … with 15,276 more rows, 4 more variables:
     ## #   `Annotation of Estimate!!Total` <chr>, `Margin of Error!!Total` <chr>,
     ## #   `Annotation of Margin of Error!!Total` <chr>, ...7 <lgl>, and abbreviated
     ## #   variable names ¹​geographic_area_name, ²​category, ³​income_estimate,
     ## #   ⁴​income_moe, ⁵​income_SE, ⁶​income_CV, ⁷​income_lo, ⁸​income_hi,
-    ## #   ⁹​`Geographic Area Name`
+    ## #   ⁹​population_estimate
 
 # Analysis
 
@@ -583,25 +583,33 @@ States: Pose your own question and try to answer it with the data.
 ``` r
 ## TODO: Pose and answer your own question about the data
 
-# df_data %>%
-#   separate(
-#     col = category,
-#     sep = "-",
-#     into = c("family_size", "redundant")
-#   ) %>%
-#   select(-redundant) %>%
-#   mutate(family_size = as.integer(family_size)) %>%
-#   select(family_size, population_estimate) %>%
-#   summarize(avg_size = mean("family_size")) %>%
-#   ggplot(aes(x = family_size, y = population_estimate)) +
-#   geom_point()
+df_data %>%
+  mutate(
+    confidence_range = income_hi - income_lo
+  ) %>%
+  separate(
+    col = category,
+    sep = "-",
+    into = c("household_size", "redundant")
+  ) %>%
+  select(household_size, population_estimate, geographic_area_name, confidence_range, -redundant) %>%
+  ggplot(aes(x = household_size, y = confidence_range), group = household_size) +
+  geom_violin(draw_quantiles = c(0.25, 0.5, 0.75)) +
+  scale_y_continuous(trans='log10')
 ```
+
+![](c09-income-assignment_files/figure-gfm/q8-task-1.png)<!-- -->
 
 **Observations**:
 
-- My original question was: how does the median house size compare with
-  the population across all counties in the US?
-- Based on the scatter plot I created, \_\_\_\_\_
+- My original question was: how does the household size compare with the
+  range of the confidence interval across all counties in the US?
+- Based on the violin plot I created, it appears that a higher household
+  size correlates to a higher confidence interval. It is my theory that
+  the logic behind this is that there are simply more data points for
+  smaller households. It goes back to the same idea as why the previous
+  graph looked that way. If anything I wonder if this plot is revealing
+  anything new/useful compared to the original plot we saw.
 
 Ideas:
 
