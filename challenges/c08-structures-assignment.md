@@ -187,10 +187,13 @@ df_samples %>%
     of the graph.
 - Assuming the scopus is the strength of an individual part made from
   this aluminum alloy, is the observed variability real or induced?
-  - Both. The real variability comes from the inherent variation between
-    each alloy piece tested, while the induced variability comes from
-    the actual tests since it isn’t possible to have a perfect
-    measurement system.
+  - Both, but also arguably just real. The real variability comes from
+    the inherent variation between each alloy piece tested. The induced
+    variability comes from the actual tests, since it isn’t possible to
+    have a perfect measurement system. But because it was specified that
+    the dataset values should be considered the “true” breaking
+    strengths, it could also be argued that there is no induced
+    variability (or even just negligible induced variability).
 
 # Assessing Structural Safety
 
@@ -372,9 +375,10 @@ df_norm_pof
 - Assuming your scopus is the probability of failure `POF` defined
   above, does your estimate exhibit real variability, induced
   variability, or both?
-  - Both. Real variability comes from the alloys never exhibiting the
-    same properties, while induced variability comes from the inherently
-    imperfect method of sampling/measuring the alloys.
+  - Only induced variability. The POF estimate depends on the
+    distribution of strength values, and the distribution isn’t
+    changing. Therefore, the POF is essentially a constant. Also because
+    the distribution is unchanging, there is no real variability here.
 - Does this confidence interval imply that `POF < 0.03`?
   - No. The confidence interval of 0.028 - 0.038 includes 0.03 within
     its range. The true POF value could fall *anywhere* within this
@@ -385,10 +389,9 @@ df_norm_pof
     and ranges that recognize the uncertainty involved.
 - Does the confidence interval above account for uncertainty arising
   from the *Monte Carlo approximation*? Why or why not?
-  - No, because the confidence interval calculations don’t involve
-    anything specifically to account for uncertainty from the Monte
-    Carlo method. It’s just a basic, generalized confidence interval
-    calculations.
+  - Yes. Confidence intervals are commonly used to account for
+    uncertainty, as they provide a range of possible values instead of a
+    singular, concrete value.
 - Does the confidence interval above account for uncertainty arising
   from *limited physical tests* (`df_samples`)? Why or why not?
   - No, because the calculations for the confidence interval are just
@@ -487,9 +490,8 @@ df_samples %>% estimate_pof()
     tests.
 - With the scopus as the `POF`, would uncertainty due to *limited
   physical tests* be induced or real?
-  - Both. Induced uncertainty comes from the measurement of the data,
-    while real uncertainty comes from the actual variation within the
-    alloy parts.
+  - Induced. Because these physical tests are limited, the corresponding
+    information is therefore limited, which creates induced uncertainty.
 
 ## Quantifying sampling uncertainty
 
@@ -529,10 +531,15 @@ df_samples %>%
 
 - Does the confidence interval above account for uncertainty arising
   from *Monte Carlo approximation* of the POF? Why or why not?
-  - Yes, because it doesn’t rely on the Monte Carlo approximation at
-    all.
+  - Yes, because it is a confidence interval, which is a range that
+    accounts for uncertainty.
 - Does the confidence interval above account for uncertainty arising
   from *limited physical tests* (`df_samples`)? Why or why not?
+  - Yes. This confidence interval was generated using the bootstrap
+    method, which is a method specifically chosen to deal with the
+    uncertainty of limited datasets. Because of the use of the bootstrap
+    method on the sample, the confidence interval does account for
+    uncertainty from the sample’s limited physical tests.
   - No, because it still uses the same unchanged dataset as before,
     which has uncertainty both from the actual aluminum parts and the
     measurement of those parts.
