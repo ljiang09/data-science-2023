@@ -405,10 +405,11 @@ data.
 ### **q5** Use the `population` estimates in `df_data` to normalize `cases` and `deaths` to produce per 100,000 counts \[3\]. Store these values in the columns `cases_per100k` and `deaths_per100k`.
 
 ``` r
-df_normalized <- df_data %>%
+df_normalized <-
+  df_data %>%
   mutate(
-    cases_per100k = (cases/population)*100000,
-    deaths_per100k = (deaths/population)*100000
+    cases_per100k = (cases / population) * 100000,
+    deaths_per100k = (deaths / population) * 100000
   )
 df_normalized
 ```
@@ -490,18 +491,31 @@ Before turning you loose, let’s complete a couple guided EDA tasks.
 
 ``` r
 df_normalized %>%
+  group_by(state) %>%
   summarise(
     mean_cases_per100k = mean(cases_per100k, na.rm = TRUE),
     sd_cases_per100k = sd(cases_per100k, na.rm = TRUE),
     mean_deaths_per100k = mean(deaths_per100k, na.rm = TRUE),
     sd_deaths_per100k = sd(deaths_per100k, na.rm = TRUE)
-  )
+  ) %>%
+  drop_na()
 ```
 
-    ## # A tibble: 1 × 4
-    ##   mean_cases_per100k sd_cases_per100k mean_deaths_per100k sd_deaths_per100k
-    ##                <dbl>            <dbl>               <dbl>             <dbl>
-    ## 1              9975.            8449.                174.              159.
+    ## # A tibble: 51 × 5
+    ##    state                mean_cases_per100k sd_cases_per100k mean_death…¹ sd_de…²
+    ##    <chr>                             <dbl>            <dbl>        <dbl>   <dbl>
+    ##  1 Alabama                          10970.            8291.        227.    172. 
+    ##  2 Alaska                           10541.           11870.         42.7    56.0
+    ##  3 Arizona                          11958.            9428.        262.    204. 
+    ##  4 Arkansas                         11196.            8753.        202.    162. 
+    ##  5 California                        8038.            7447.         88.8    87.5
+    ##  6 Colorado                          9429.            9006.        119.    136. 
+    ##  7 Connecticut                       7718.            6315.        165.     87.3
+    ##  8 Delaware                         10728.            8818.        165.    104. 
+    ##  9 District of Columbia              7372.            6164.        132.     53.9
+    ## 10 Florida                          10990.            8745.        189.    155. 
+    ## # … with 41 more rows, and abbreviated variable names ¹​mean_deaths_per100k,
+    ## #   ²​sd_deaths_per100k
 
 ### **q7** Find the top 10 counties in terms of `cases_per100k`, and the top 10 in terms of `deaths_per100k`. Report the population of each county along with the per-100,000 counts. Compare the counts against the mean values you found in q6. Note any observations.
 
