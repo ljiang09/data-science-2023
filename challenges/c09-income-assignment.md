@@ -561,10 +561,10 @@ df_data %>%
 
 - What *overall* trend do you see between `SE` and population? Why might
   this trend exist?
-  - I see a negative logarithmic trend. This is evident by the
-    downward-trending, linear-following cloud along logarithmic scales.
-    This might exist because higher populations = more data points. More
-    data points decreases the standard error.
+  - I see a negative power-law trend. This is evident by the
+    downward-trending, linear-following cloud along the two logarithmic
+    scales. This specific pattern might exist because higher populations
+    = more data points. More data points decreases the standard error.
 - What does this *overall* trend tell you about the relative ease of
   studying small vs large counties?
   - This tells me that it can be more difficult to accurately gather and
@@ -581,8 +581,6 @@ States: Pose your own question and try to answer it with the data.
 ### **q8** Pose your own question about the data. Create a visualization (or table) here, and document your observations.
 
 ``` r
-## TODO: Pose and answer your own question about the data
-
 df_data %>%
   mutate(
     confidence_range = income_hi - income_lo
