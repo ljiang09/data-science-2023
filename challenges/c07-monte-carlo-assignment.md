@@ -180,7 +180,7 @@ set will estimate the probability of points landing in that area (see
 
 ``` r
 set.seed(100)
-n <- 1000 # Choose a sample size
+n <- 1000000 # Choose a sample size
 df_q1 <- tibble(
   x = runif(n, min = 0, max = 1),
   y = runif(n, min = 0, max = 1),
@@ -190,20 +190,20 @@ df_q1 <- tibble(
 df_q1
 ```
 
-    ## # A tibble: 1,000 × 3
-    ##         x      y  stat
-    ##     <dbl>  <dbl> <dbl>
-    ##  1 0.308  0.0740     4
-    ##  2 0.258  0.112      4
-    ##  3 0.552  0.624      4
-    ##  4 0.0564 0.671      4
-    ##  5 0.469  0.366      4
-    ##  6 0.484  0.183      4
-    ##  7 0.812  0.0267     4
-    ##  8 0.370  0.490      4
-    ##  9 0.547  0.596      4
-    ## 10 0.170  0.956      4
-    ## # … with 990 more rows
+    ## # A tibble: 1,000,000 × 3
+    ##         x     y  stat
+    ##     <dbl> <dbl> <dbl>
+    ##  1 0.308  0.902     4
+    ##  2 0.258  0.893     4
+    ##  3 0.552  0.337     4
+    ##  4 0.0564 0.362     4
+    ##  5 0.469  0.532     4
+    ##  6 0.484  0.919     0
+    ##  7 0.812  0.143     4
+    ##  8 0.370  0.940     0
+    ##  9 0.547  0.397     4
+    ## 10 0.170  0.238     4
+    ## # … with 999,990 more rows
 
 ### **q2** Using your data in `df_q1`, estimate $\pi$.
 
@@ -214,7 +214,7 @@ pi_est <- df_q1 %>%
 pi_est
 ```
 
-    ## [1] 3.092
+    ## [1] 3.139032
 
 # Quantifying Uncertainty
 
@@ -236,31 +236,28 @@ hi <- pi_est + qnorm( 1 - (1 - confidence_level) / 2 ) * sd(df_q1 %>% pull(stat)
 lo
 ```
 
-    ## [1] 2.955448
+    ## [1] 3.134797
 
 ``` r
 hi
 ```
 
-    ## [1] 3.228552
+    ## [1] 3.143267
 
 **Observations**:
 
 - Does your interval include the true value of $\pi$?
-  - It does, 3.14 \> 2.955 and 3.14 \< 3.228
+  - It does, 3.14 \> 3.134797 and 3.14 \< 3.143267
 - What confidence level did you choose?
   - I chose a confidence level of 99%, as that allowed for a large range
     and would therefore have a good chance of including the true value
     of pi within it.
 - Was your sample size $n$ large enough? Why do you say that?
-  - I would say that a sample size of 1000 is large enough, as my
-    confidence interval not only includes the real value of pi but also
-    extends relatively broadly past it. This means that if the
-    randomly-generated sample was somehow skewed, it is likely that the
-    real value of pi will still fall within the interval. Of course,
-    larger samples are always better for statistical precision (like
-    narrowing the confidence interval), but it appears that 1000 is a
-    reasonable size to catch the true value of pi.
+  - My sample size of 1,000,000 was large enough, because the true value
+    of pi is within 0.01 of both confidence interval bounds. This is
+    quite a tight confidence interval compared to the scale of pi (0.01
+    compared to 3.14), which means the sample size was large enough to
+    generate a relatively accurate number.
 
 # References
 

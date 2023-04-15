@@ -24,7 +24,7 @@ Unlike exercises, **challenges will be graded**. The following rubrics define ho
 <!-- ------------------------- -->
 
 | Category    | Needs Improvement                                                                                                | Satisfactory                                                                                                               |
-|-------------------|-----------------------------|-------------------------|
+|-------------------|----------------------------|-------------------------|
 | Effort      | Some task **q**'s left unattempted                                                                               | All task **q**'s attempted                                                                                                 |
 | Observed    | Did not document observations, or observations incorrect                                                         | Documented correct observations based on analysis                                                                          |
 | Supported   | Some observations not clearly supported by analysis                                                              | All observations clearly supported by analysis (table, graph, etc.)                                                        |
@@ -108,7 +108,7 @@ Remember in `e-stat02-probability` we learned how to estimate probabilities as t
 
 ```{r q1-task}
 set.seed(100)
-n <- 1000 # Choose a sample size
+n <- 1000000 # Choose a sample size
 df_q1 <- tibble(
   x = runif(n, min = 0, max = 1),
   y = runif(n, min = 0, max = 1),
@@ -148,11 +148,11 @@ hi
 **Observations**:
 
 -   Does your interval include the true value of $\pi$?
-    -   It does, 3.14 \> 2.955 and 3.14 \< 3.228
+    -   It does, 3.14 \> 3.134797 and 3.14 \< 3.143267
 -   What confidence level did you choose?
     -   I chose a confidence level of 99%, as that allowed for a large range and would therefore have a good chance of including the true value of pi within it.
 -   Was your sample size $n$ large enough? Why do you say that?
-    -   I would say that a sample size of 1000 is large enough, as my confidence interval not only includes the real value of pi but also extends relatively broadly past it. This means that if the randomly-generated sample was somehow skewed, it is likely that the real value of pi will still fall within the interval. Of course, larger samples are always better for statistical precision (like narrowing the confidence interval), but it appears that 1000 is a reasonable size to catch the true value of pi.
+    -   My sample size of 1,000,000 was large enough, because the true value of pi is within 0.01 of both confidence interval bounds. This is quite a tight confidence interval compared to the scale of pi (0.01 compared to 3.14), which means the sample size was large enough to generate a relatively accurate number.
 
 # References
 
