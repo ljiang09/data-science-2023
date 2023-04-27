@@ -640,32 +640,78 @@ a CI or PI for the design prediction.
 ``` r
 # NOTE: No need to change df_design; this is the target the client
 #       is considering
-# df_design <- tibble(x = 1, L = 0.2, W = 0.04, U_0 = 1.0)
-# # NOTE: This is the level the "probability" level customer wants
-# pr_level <- 0.8
-# 
-# ## TODO: Fit a model, assess the uncertainty in your prediction, 
-# #        use the validation data to check your uncertainty estimates, and 
-# #        make a recommendation on a *dependable range* of values for T_norm
-# #        at the point `df_design`
-# fit_q6 <- NA
+df_design <- tibble(x = 1, L = 0.2, W = 0.04, U_0 = 1.0)
+# NOTE: This is the level the "probability" level customer wants
+pr_level <- 0.8
+
+## TODO: Fit a model, assess the uncertainty in your prediction,
+#        use the validation data to check your uncertainty estimates, and
+#        make a recommendation on a *dependable range* of values for T_norm
+#        at the point `df_design`
+fit_q6 <- df_train %>% 
+  lm(formula = T_norm ~ x * U_0 * L * W)
+
+# check accuracy of model
+rsquare(fit_q6, df_train)
 ```
+
+    ## [1] 0.7177773
+
+``` r
+rsquare(fit_q6, df_validate)
+```
+
+    ## [1] 0.7057262
+
+``` r
+df_design %>%
+  add_uncertainties(fit_q6, interval = "prediction", prefix = "pi", level = pr_level)
+```
+
+    ## # A tibble: 1 × 7
+    ##       x     L     W   U_0 pi_fit pi_lwr pi_upr
+    ##   <dbl> <dbl> <dbl> <dbl>  <dbl>  <dbl>  <dbl>
+    ## 1     1   0.2  0.04     1   1.92   1.28   2.57
+
+``` r
+df_validate %>%
+  add_uncertainties(fit_q6, interval = "prediction", prefix = "pi", level = pr_level) %>% 
+  mutate(
+    in_range = (T_norm >= pi_lwr) & (T_norm <= pi_upr)
+  ) %>% 
+  summarize(
+    inside_range = sum(in_range),
+    outside_range = n() - inside_range
+  )
+```
+
+    ## # A tibble: 1 × 2
+    ##   inside_range outside_range
+    ##          <int>         <int>
+    ## 1           57             3
 
 **Recommendation**:
 
 - How much do you trust your model? Why?
-  - (Your response here)
+  - I kind of trust it. There are a decent number of data points, and
+    out of the 60, only 3 are outside of the range. Additionally, my
+    R-squared values are both about 0.7.
 - What kind of interval—confidence or prediction—would you use for this
   task, and why?
-  - (Your response here)
+  - Prediction interval. We’re trying to *predict future values* based
+    on a model and existing data, which is when a prediction interval is
+    appropriate. A confidence interval would be used to analyze existing
+    data, and doesn’t account for future uncertainties like a prediction
+    interval does.
 - What fraction of validation cases lie within the interval you predict?
   How does this compare with `pr_level`?
-  - (Your response here)
+  - 57/60 = 0.95. This is higher than the `pr_level` of 0.8.
 - What interval for `T_norm` would you recommend the design team to plan
   around?
-  - (Your response here)
+  - 1.278808 to 2.56796
 - Are there any other recommendations you would provide?
-  - (Your response here)
+  - Adding more predictors (strategically) might help to decrease the
+    fraction of validation cases so it is closer to the `pr_level`.
 
 *Bonus*: One way you could take this analysis further is to recommend
 which other variables the design team should tightly control. You could
